@@ -72,6 +72,9 @@ class FullMarketScanner:
         self._last_tier1 = 0
         self._lock       = threading.Lock()
 
+        token = open("access_token.txt").read().strip()
+        self._sdk = GrowwAPI(token)
+
         def _load_access_token():
             try:
                 with open("access_token.txt") as f:
@@ -83,7 +86,7 @@ class FullMarketScanner:
 
     def load_universe(self):
         logger.info(
-            "📥 Loading instrument universe from Groww SDK..."
+            "📥 Loading instrument universe from CSV...."
         )
         try:
             df = pd.read_csv("instruments.csv")
@@ -502,6 +505,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
