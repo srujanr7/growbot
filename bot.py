@@ -910,7 +910,7 @@ if __name__ == "__main__":
     notifier.start_command_listener(bot_ref=sys.modules[__name__])
 
     schedule.every(config.CYCLE_INTERVAL_SECONDS).seconds.do(run_cycle)
-    schedule.every(5).minutes.do(refresh_ws_subscriptions)
+    schedule.every(30).minutes.do(refresh_ws_subscriptions)
     schedule.every().day.at(config.DAILY_RESET_AT).do(daily_reset)
     schedule.every().day.at(config.SQUAREOFF_AT).do(square_off_all)
     schedule.every().day.at("15:30").do(send_daily_summary)
@@ -941,4 +941,5 @@ if __name__ == "__main__":
             notifier.error("MainLoopError", str(e))
 
             time.sleep(5)
+
 
