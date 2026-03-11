@@ -31,18 +31,25 @@ class GrowwAPIWrapper:
 
     security_id = bare trading_symbol for Groww orders (e.g. "RELIANCE")
     """
-
+    
     def __init__(self):
-        token = os.getenv("GROWW_ACCESS_TOKEN")
+        token = self._load_access_token()
         if not token:
             raise RuntimeError(
-                "GROWW_ACCESS_TOKEN not set in environment. "
-                "Generate via GrowwAPI.get_access_token() and "
-                "store in .env"
+                "Access token missing. Run generate_token.py"
             )
         self._sdk           = _GrowwSDK(token)
         self._token_invalid = False
         logger.info("✅ Groww API initialised")
+
+    def _load_access_token(self):
+        try:
+            with open("access_token.txt") as f:
+                return f.read().strip()
+        except:
+            raise RuntimeError(
+                "Access token missing. Run generate_token.py"
+            )
 
     # ── Compatibility shim ────────────────────────────────────
 
@@ -579,7 +586,7 @@ class GrowwAPIWrapper:
             self._token_invalid = True
             logger.error(
                 f"❌ Groww auth error in {context}. "
-                "Regenerate GROWW_ACCESS_TOKEN."
+                "Run generate_token.py to refresh token."
             )
         elif "429" in err or "rate" in err.lower():
             logger.warning(
@@ -587,4 +594,8 @@ class GrowwAPIWrapper:
             )
             time.sleep(2)
         else:
+
             logger.error(f"SDK error in {context}: {exc}")
+
+
+  
