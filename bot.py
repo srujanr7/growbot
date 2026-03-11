@@ -179,11 +179,13 @@ def signal_worker():
 
             result = trainer.get_signal(df)
 
-            if result["signal"] == "BUY":
-                process_entry(cfg, result, ltp)
+            # if result["signal"] == "BUY":
+            #     process_entry(cfg, result, ltp)
 
-        except Exception as e:
-            logger.error(f"Signal worker error: {e}")
+            pass
+
+        except Exception:
+            logger.exception("Signal worker crash")
 
 def is_market_open() -> bool:
     now = datetime.now().strftime("%H:%M")
@@ -939,3 +941,4 @@ if __name__ == "__main__":
             notifier.error("MainLoopError", str(e))
 
             time.sleep(5)
+
