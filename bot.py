@@ -191,13 +191,15 @@ def is_market_open() -> bool:
 
 
 def _ws_token_key(cfg: dict) -> str:
-    """
-    Returns the bare exchange_token used as key in
-    price_feed.latest_prices.
-    e.g. "NSE:2885" → "2885"
-         "NSE:NIFTY" → "NIFTY"
-    """
-    return cfg["ws_token"].split(":")[1]
+    token = cfg.get("ws_token")
+    if not token:
+        return None
+
+    parts = token.split(":")
+    if len(parts) != 2:
+        return None
+
+    return parts[1]
 
 
 def _get_ltp_for_cfg(cfg: dict) -> float:
@@ -935,4 +937,5 @@ if __name__ == "__main__":
         except Exception as e:
             logger.error(f"Main loop error: {e}")
             notifier.error("MainLoopError", str(e))
+
             time.sleep(5)
