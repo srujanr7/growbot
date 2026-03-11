@@ -89,7 +89,7 @@ class FullMarketScanner:
             "📥 Loading instrument universe from CSV...."
         )
         try:
-            df = pd.read_csv("instruments.csv")
+            df = pd.read_csv("instruments.csv", low_memory=False)
             if df is None or df.empty:
                 logger.error("Groww instruments DataFrame is empty")
                 return
@@ -505,6 +505,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
