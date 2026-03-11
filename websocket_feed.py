@@ -73,27 +73,19 @@ class PriceFeed:
                 parts = token.split(":")
                 if len(parts) != 2:
                     continue
-                exchange, exch_token = parts[0], parts[1]
-
+        
+                exchange, exch_token = parts
+        
                 if exch_token.isdigit():
                     equity_list.append({
-                        "exchange": "NSE",
+                        "exchange": exchange,
                         "segment": "CASH",
                         "exchange_token": exch_token,
                     })
-                elif exch_token.isdigit():
-                    # Numeric token → equity CASH
-                    equity_list.append({
-                        "exchange":       exchange,
-                        "segment":        "CASH",
-                        "exchange_token": exch_token,
-                    })
                 else:
-                    # Non-numeric token → index
-                    # e.g. "NIFTY", "BANKNIFTY"
                     index_list.append({
-                        "exchange":       exchange,
-                        "segment":        "CASH",
+                        "exchange": exchange,
+                        "segment": "CASH",
                         "exchange_token": exch_token,
                     })
             except Exception as e:
@@ -384,5 +376,6 @@ class OrderFeed:
         logger.warning(f"wait_for_fill timeout for order {order_id}")
 
         return self.order_states.get(order_id, {})
+
 
 
