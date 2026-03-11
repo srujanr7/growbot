@@ -72,7 +72,7 @@ class FullMarketScanner:
         self._last_tier1 = 0
         self._lock       = threading.Lock()
 
-        token = open("access_token.txt").read().strip()
+        token = _load_access_token()
         self._sdk = GrowwAPI(token)
 
         def _load_access_token():
@@ -505,6 +505,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
