@@ -20,6 +20,3 @@ torch             # required by stable-baselines3 LSTM + PPO
 
 # ── Technical Analysis ────────────────────────────────────────
 ta                # replaces pandas-ta (broken on Python 3.11+)
-
-# ── Logging ───────────────────────────────────────────────────
-tensorboard       # optional — for PPO training visualisation
