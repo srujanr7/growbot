@@ -78,9 +78,6 @@ class FullMarketScanner:
                     return f.read().strip()
             except:
                 raise Exception("Access token missing. Run generate_token.py")
-        
-        token = _load_access_token()
-        self._sdk = GrowwAPI(token)
 
     # ── Universe loading ──────────────────────────────────────
 
@@ -505,6 +502,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
