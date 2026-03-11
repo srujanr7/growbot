@@ -140,10 +140,11 @@ class LGBMModel:
             return {"signal": "HOLD", "confidence": 0.0}
 
     def save(self):
-    joblib.dump(self.model, self.model_path)
+        joblib.dump(self.model, self.model_path)
 
     def load(self):
         try:
             self.model = joblib.load(self.model_path)
         except:
+
             pass
