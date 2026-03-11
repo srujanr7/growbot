@@ -127,8 +127,8 @@ class PriceFeed:
                             self.latest_prices[exch_token] = price
                         if self.on_tick:
                             self.on_tick(exch_token, price)
-        except Exception as e:
-            logger.error(f"PriceFeed _on_equity_data error: {e}")
+        except Exception:
+            logger.exception("PriceFeed equity callback crash")
 
     def _on_index_data(self, meta):
         """
@@ -384,4 +384,5 @@ class OrderFeed:
         logger.warning(f"wait_for_fill timeout for order {order_id}")
 
         return self.order_states.get(order_id, {})
+
 
