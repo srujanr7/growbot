@@ -104,7 +104,38 @@ class FullMarketScanner:
 
             self.universe_equity = self._parse_equity(df)
             self.universe_fno    = self._parse_fno(df)
-            self.universe_index  = self._parse_index(df)
+            index_symbols = [
+                "NIFTY",
+                "BANKNIFTY",
+                "FINNIFTY",
+                "MIDCPNIFTY",
+                "NIFTYNEXT50",
+                "NIFTYIT",
+                "NIFTYAUTO",
+                "NIFTYMETAL",
+                "NIFTYPHARMA",
+                "NIFTYENERGY",
+                "NIFTYREALTY",
+                "NIFTYFMCG",
+                "NIFTYMEDIA",
+                "NIFTYPSE",
+                "NIFTYCONSUMPTION"
+            ]
+            
+            self.universe_index = []
+            
+            for symbol in index_symbols:
+                self.universe_index.append({
+                    "name": symbol,
+                    "scrip_code": f"NIDX_{symbol}",
+                    "security_id": symbol,
+                    "ws_token": f"NSE:{symbol}",
+                    "exchange_token": symbol,
+                    "segment": "INDEX",
+                    "product": None,
+                    "exchange": "NSE",
+                    "instrument_type": "INDEX",
+                })
 
             logger.info(
                 f"📦 Universe — "
@@ -507,6 +538,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
