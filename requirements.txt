@@ -1,0 +1,25 @@
+# ── Core ──────────────────────────────────────────────────────
+requests
+python-dotenv
+pandas
+schedule
+numpy
+joblib
+
+# ── Groww SDK ─────────────────────────────────────────────────
+growwapi          # replaces indstocks (INDstocks broker SDK)
+pyotp             # required for TOTP token generation
+
+# ── Data & ML ─────────────────────────────────────────────────
+scikit-learn
+xgboost
+lightgbm
+stable-baselines3
+gymnasium
+torch             # required by stable-baselines3 LSTM + PPO
+
+# ── Technical Analysis ────────────────────────────────────────
+ta                # replaces pandas-ta (broken on Python 3.11+)
+
+# ── Logging ───────────────────────────────────────────────────
+tensorboard       # optional — for PPO training visualisation
