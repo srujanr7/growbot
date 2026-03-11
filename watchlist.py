@@ -89,7 +89,7 @@ class FullMarketScanner:
             "📥 Loading instrument universe from Groww SDK..."
         )
         try:
-            df = self._sdk.get_all_instruments()
+            df = pd.read_csv("instruments.csv")
             if df is None or df.empty:
                 logger.error("Groww instruments DataFrame is empty")
                 return
@@ -505,6 +505,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
