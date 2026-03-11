@@ -218,49 +218,49 @@ class FullMarketScanner:
         return instruments
 
     def _parse_index(self, df: pd.DataFrame) -> list:
-    """
-    Extract index instruments from CSV.
-
-    Groww instruments CSV identifies indices using:
-      SERIES = INDEX
-    """
-
-    try:
-        mask = (
-            (df["EXCHANGE"].str.upper() == "NSE") &
-            (df["SERIES"].str.upper() == "INDEX")
-        )
-        filtered = df[mask].copy()
-
-    except KeyError as e:
-        logger.error(f"Index parse: missing column {e}")
-        return []
-
-    instruments = []
-
-    for _, row in filtered.iterrows():
+        """
+        Extract index instruments from CSV.
+    
+        Groww instruments CSV identifies indices using:
+          SERIES = INDEX
+        """
+    
         try:
-            symbol = str(row.get("TRADING_SYMBOL", "")).strip()
-
-            if not symbol:
-                continue
-
-            instruments.append({
-                "name": symbol,
-                "scrip_code": f"NIDX_{symbol}",
-                "security_id": symbol,
-                "ws_token": f"NSE:{symbol}",
-                "exchange_token": symbol,
-                "segment": "INDEX",
-                "product": None,
-                "exchange": "NSE",
-                "instrument_type": "INDEX",
-            })
-
-        except Exception as e:
-            logger.warning(f"Skipping index row: {e}")
-
-    return instruments
+            mask = (
+                (df["EXCHANGE"].str.upper() == "NSE") &
+                (df["SERIES"].str.upper() == "INDEX")
+            )
+            filtered = df[mask].copy()
+    
+        except KeyError as e:
+            logger.error(f"Index parse: missing column {e}")
+            return []
+    
+        instruments = []
+    
+        for _, row in filtered.iterrows():
+            try:
+                symbol = str(row.get("TRADING_SYMBOL", "")).strip()
+    
+                if not symbol:
+                    continue
+    
+                instruments.append({
+                    "name": symbol,
+                    "scrip_code": f"NIDX_{symbol}",
+                    "security_id": symbol,
+                    "ws_token": f"NSE:{symbol}",
+                    "exchange_token": symbol,
+                    "segment": "INDEX",
+                    "product": None,
+                    "exchange": "NSE",
+                    "instrument_type": "INDEX",
+                })
+    
+            except Exception as e:
+                logger.warning(f"Skipping index row: {e}")
+    
+        return instruments
 
     # ── Sector detection ──────────────────────────────────────
 
@@ -507,6 +507,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
