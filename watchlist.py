@@ -228,7 +228,7 @@ class FullMarketScanner:
         try:
             mask = (
                 (df["SEGMENT"].str.upper()         == "CASH") &
-                (df["INSTRUMENT_TYPE"].str.upper() == "INDEX")
+                (df["INSTRUMENT_TYPE"].str.upper().isin(["INDEX", "INDICES"]))
             )
             filtered = df[mask].copy()
         except KeyError:
@@ -487,4 +487,5 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
