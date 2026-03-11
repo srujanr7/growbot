@@ -218,47 +218,49 @@ class FullMarketScanner:
         return instruments
 
     def _parse_index(self, df: pd.DataFrame) -> list:
-        """
-        Filter: segment=CASH, instrument_type=INDEX
+    """
+    Extract index instruments from CSV.
 
-        Index exchange_token from Groww instruments CSV is the
-        string name (e.g. "NIFTY"), not a numeric token.
-        This is what subscribe_index_value expects.
-        """
+    Groww instruments CSV identifies indices using:
+      SERIES = INDEX
+    """
+
+    try:
+        mask = (
+            (df["EXCHANGE"].str.upper() == "NSE") &
+            (df["SERIES"].str.upper() == "INDEX")
+        )
+        filtered = df[mask].copy()
+
+    except KeyError as e:
+        logger.error(f"Index parse: missing column {e}")
+        return []
+
+    instruments = []
+
+    for _, row in filtered.iterrows():
         try:
-            mask = (
-                (df["SEGMENT"].str.upper()         == "CASH") &
-                (df["INSTRUMENT_TYPE"].str.upper().isin(["INDEX", "INDICES"]))
-            )
-            filtered = df[mask].copy()
-        except KeyError:
-            return []
+            symbol = str(row.get("TRADING_SYMBOL", "")).strip()
 
-        instruments = []
-        for _, row in filtered.iterrows():
-            try:
-                symbol     = str(row.get("TRADING_SYMBOL", "")).strip()
-                # For indices, exchange_token in Groww CSV is the
-                # string symbol name (e.g. "NIFTY", "BANKNIFTY")
-                exch_token = str(
-                    row.get("EXCHANGE_TOKEN", symbol)
-                ).strip()
-                if not symbol:
-                    continue
-                instruments.append({
-                    "name":            symbol,
-                    "scrip_code":      f"NIDX_{symbol}",
-                    "security_id":     symbol,
-                    "ws_token":        f"NSE:{exch_token}",
-                    "exchange_token":  exch_token,
-                    "segment":         "INDEX",
-                    "product":         None,
-                    "exchange":        "NSE",
-                    "instrument_type": "INDEX",
-                })
-            except Exception as e:
-                logger.warning(f"Skipping index row: {e}")
-        return instruments
+            if not symbol:
+                continue
+
+            instruments.append({
+                "name": symbol,
+                "scrip_code": f"NIDX_{symbol}",
+                "security_id": symbol,
+                "ws_token": f"NSE:{symbol}",
+                "exchange_token": symbol,
+                "segment": "INDEX",
+                "product": None,
+                "exchange": "NSE",
+                "instrument_type": "INDEX",
+            })
+
+        except Exception as e:
+            logger.warning(f"Skipping index row: {e}")
+
+    return instruments
 
     # ── Sector detection ──────────────────────────────────────
 
@@ -505,6 +507,7 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
 
