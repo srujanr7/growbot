@@ -187,10 +187,11 @@ class LSTMModel:
             return {"signal": "HOLD", "confidence": 0.0}
 
     def save(self):
-    torch.save(self.model.state_dict(), self.model_path)
+        torch.save(self.model.state_dict(), self.model_path)
 
     def load(self):
         try:
             self.model.load_state_dict(torch.load(self.model_path))
         except:
+
             pass
