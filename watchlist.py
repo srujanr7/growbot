@@ -72,7 +72,14 @@ class FullMarketScanner:
         self._last_tier1 = 0
         self._lock       = threading.Lock()
 
-        token    = os.getenv("GROWW_ACCESS_TOKEN")
+        def _load_access_token():
+            try:
+                with open("access_token.txt") as f:
+                    return f.read().strip()
+            except:
+                raise Exception("Access token missing. Run generate_token.py")
+        
+        token = _load_access_token()
         self._sdk = GrowwAPI(token)
 
     # ── Universe loading ──────────────────────────────────────
@@ -478,4 +485,5 @@ class FullMarketScanner:
         thread = threading.Thread(target=_loop, daemon=True)
         thread.start()
         logger.info("✅ Background market scanner started")
+
         return thread
