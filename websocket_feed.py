@@ -75,11 +75,10 @@ class PriceFeed:
                     continue
                 exchange, exch_token = parts[0], parts[1]
 
-                if exchange == "NFO":
-                    # FNO tokens go through equity subscribe_ltp
+                if exch_token.isdigit():
                     equity_list.append({
-                        "exchange":       "NSE",
-                        "segment":        "FNO",
+                        "exchange": "NSE",
+                        "segment": "CASH",
                         "exchange_token": exch_token,
                     })
                 elif exch_token.isdigit():
@@ -385,3 +384,4 @@ class OrderFeed:
         logger.warning(f"wait_for_fill timeout for order {order_id}")
 
         return self.order_states.get(order_id, {})
+
