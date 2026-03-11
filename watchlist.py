@@ -473,6 +473,24 @@ class FullMarketScanner:
             )
             return [inst["ws_token"] for inst in all_insts]
 
+    def get_cfg_from_token(self, token: str):
+        """
+        Returns instrument config using exchange_token.
+        Used by signal_worker() when websocket tick arrives.
+        """
+        with self._lock:
+            all_insts = (
+                self.shortlist_equity +
+                self.shortlist_fno +
+                self.shortlist_index
+            )
+    
+            for inst in all_insts:
+                if inst["exchange_token"] == token:
+                    return inst
+    
+        return None
+
     def start_background_refresh(self):
         def _loop():
             while True:
@@ -487,5 +505,6 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
 
 
