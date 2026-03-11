@@ -4,8 +4,14 @@ import time
 import os
 from growwapi import GrowwFeed, GrowwAPI
 
-logger = logging.getLogger(__name__)
+def _load_access_token():
+    try:
+        with open("access_token.txt") as f:
+            return f.read().strip()
+    except:
+        raise Exception("Access token missing. Run generate_token.py")
 
+logger = logging.getLogger(__name__)
 
 class PriceFeed:
     """
@@ -157,7 +163,7 @@ class PriceFeed:
         subscribe_ltp is a BLOCKING call — run in its own thread.
         Reconnects automatically on failure.
         """
-        token = os.getenv("GROWW_ACCESS_TOKEN")
+        token = _load_access_token()
         while self._running:
             try:
                 groww              = GrowwAPI(token)
@@ -189,7 +195,7 @@ class PriceFeed:
         """
         subscribe_index_value is a BLOCKING call — separate thread.
         """
-        token = os.getenv("GROWW_ACCESS_TOKEN")
+        token = _load_access_token()
         while self._running:
             try:
                 groww             = GrowwAPI(token)
@@ -292,7 +298,7 @@ class OrderFeed:
         self._sdk         = None
 
     def start(self):
-        token     = os.getenv("GROWW_ACCESS_TOKEN")
+        token = _load_access_token()
         self._sdk = GrowwAPI(token)
         logger.info("✅ Order feed started (Groww REST polling)")
 
@@ -377,4 +383,5 @@ class OrderFeed:
                 return state
             time.sleep(1.0)
         logger.warning(f"wait_for_fill timeout for order {order_id}")
+
         return self.order_states.get(order_id, {})
