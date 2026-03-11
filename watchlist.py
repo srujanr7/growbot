@@ -419,7 +419,7 @@ class FullMarketScanner:
                     f"Equity batch {batch_num} error: {e}"
                 )
 
-            time.sleep(0.3)
+            time.sleep(1.5)
 
         scored.sort(key=lambda x: x["score"], reverse=True)
         return scored[:top_n]
@@ -487,3 +487,4 @@ class FullMarketScanner:
         logger.info("✅ Background market scanner started")
 
         return thread
+
