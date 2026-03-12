@@ -126,24 +126,46 @@ class PriceFeed:
         """
         Callback for index value ticks.
         Call feed.get_index_value() inside callback.
-
-        Response shape:
-          {"NSE": {"CASH": {"NIFTY": {"tsInMillis": ...,
-                                      "value": 24386.7}}}}
         """
         try:
             idx_data = self._index_feed.get_index_value()
+    
+            # FIX 1: check if data exists
+            if not idx_data:
+                return
+    
             for exchange, seg_data in idx_data.items():
+    
+                if not seg_data:
+                    continue
+    
                 for segment, token_data in seg_data.items():
+    
+                    if not token_data:
+                        continue
+    
                     for exch_token, tick in token_data.items():
+    
+                        if not tick:
+                            continue
+    
                         price = tick.get("value")
+    
+                        # FIX 2: handle missing value
                         if price is None:
                             continue
-                        price = float(price)
+    
+                        try:
+                            price = float(price)
+                        except Exception:
+                            continue
+    
                         with self._lock:
                             self.latest_prices[exch_token] = price
+    
                         if self.on_tick:
                             self.on_tick(exch_token, price)
+    
         except Exception as e:
             logger.error(f"PriceFeed _on_index_data error: {e}")
 
@@ -376,6 +398,7 @@ class OrderFeed:
         logger.warning(f"wait_for_fill timeout for order {order_id}")
 
         return self.order_states.get(order_id, {})
+
 
 
 
